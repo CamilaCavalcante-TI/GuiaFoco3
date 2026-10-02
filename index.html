@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GuiaFoco - PoC de intervenção adaptativa para alfabetização infantil">
+  <title>GuiaFoco | Alfabetização Infantil</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <section id="loginScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand brand-center">
+        <div class="brand-mark">G</div>
+        <div>
+          <strong>GuiaFoco</strong>
+          <span>Aprender brincando</span>
+        </div>
+      </div>
+      <div class="auth-copy">
+        <h1>Bem-vindo ao GuiaFoco 👋</h1>
+        <p>Uma experiência educativa que transforma o tempo de tela em oportunidades de aprendizagem.</p>
+      </div>
+      <form id="loginForm">
+        <label for="loginEmail">E-mail</label>
+        <input id="loginEmail" type="email" placeholder="responsavel@email.com" required>
+        <label for="loginPassword">Senha</label>
+        <input id="loginPassword" type="password" placeholder="••••••••" required>
+        <button class="btn btn-primary btn-full" type="submit">Entrar</button>
+      </form>
+      <button class="link-button" id="showRegister">Criar uma conta</button>
+      <button class="demo-button" id="demoLogin">Entrar na demonstração</button>
+    </div>
+  </section>
+
+  <section id="registerScreen" class="auth-screen hidden">
+    <div class="auth-card wide">
+      <button class="back-button" id="backToLogin">← Voltar</button>
+      <div class="brand brand-center">
+        <div class="brand-mark">G</div>
+        <div><strong>GuiaFoco</strong><span>Cadastro do responsável</span></div>
+      </div>
+      <h1>Vamos criar seu perfil</h1>
+      <p class="muted">Cadastre o responsável e, em seguida, a criança.</p>
+      <form id="registerForm" class="form-grid">
+        <div class="field full"><label for="responsavelNome">Nome do responsável</label><input id="responsavelNome" required></div>
+        <div class="field"><label for="responsavelEmail">E-mail</label><input id="responsavelEmail" type="email" required></div>
+        <div class="field"><label for="responsavelSenha">Senha</label><input id="responsavelSenha" type="password" required></div>
+        <div class="field full"><label for="criancaNome">Nome da criança</label><input id="criancaNome" required></div>
+        <div class="field"><label for="criancaIdade">Idade</label><input id="criancaIdade" type="number" min="5" max="8" value="7" required></div>
+        <div class="field"><label for="criancaSerie">Série escolar</label>
+          <select id="criancaSerie" required>
+            <option value="Pré-escola II">Pré-escola II</option>
+            <option value="1º ano do Ensino Fundamental">1º ano do Ensino Fundamental</option>
+            <option value="2º ano do Ensino Fundamental" selected>2º ano do Ensino Fundamental</option>
+            <option value="3º ano do Ensino Fundamental">3º ano do Ensino Fundamental</option>
+          </select>
+          <small class="field-help">Selecione a série escolar da criança.</small>
+        </div>
+        <div class="field"><label for="tempoEstimado">Tempo de tela estimado (h/dia)</label><input id="tempoEstimado" type="number" step="0.1" value="4.5" required></div>
+        <div class="field"><label for="limiteDiario">Limite diário (min)</label><input id="limiteDiario" type="number" value="150" required></div>
+        <div class="field"><label for="inicioPermitido">Início permitido</label><input id="inicioPermitido" type="time" value="18:00"></div>
+        <div class="field"><label for="fimPermitido">Fim permitido</label><input id="fimPermitido" type="time" value="21:00"></div>
+        <div class="field full"><label>Preferências da criança</label>
+          <div class="checks">
+            <label><input type="checkbox" name="pref" value="Memória" checked> Memória</label>
+            <label><input type="checkbox" name="pref" value="Puzzle" checked> Puzzle</label>
+            <label><input type="checkbox" name="pref" value="Atenção"> Atenção</label>
+            <label><input type="checkbox" name="pref" value="Leitura"> Leitura</label>
+          </div>
+        </div>
+        <div class="field full"><label class="switch-row"><input id="ativarIntervencao" type="checkbox" checked><span>Ativar intervenção adaptativa</span></label></div>
+        <div class="field"><label for="intervencaoMin">Intervir após (min)</label><input id="intervencaoMin" type="number" value="20" min="1"></div>
+        <div class="field"><label class="switch-row"><input id="ativarBloqueio" type="checkbox" checked><span>Ativar bloqueio/interrupção simulada</span></label></div>
+        <div class="field full"><button class="btn btn-primary btn-full" type="submit">Criar perfil e entrar</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="appScreen" class="app-shell hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">G</div>
+        <div><strong>GuiaFoco</strong><span>Área do responsável</span></div>
+      </div>
+      <nav aria-label="Navegação principal">
+        <button class="nav-item active" data-page="dashboard">🏠 <span>Início</span></button>
+        <button class="nav-item" data-page="crianca">👧 <span>Criança</span></button>
+        <button class="nav-item" data-page="desempenho">📊 <span>Desempenho</span></button>
+        <button class="nav-item" data-page="tempo">⏱️ <span>Tempo de tela</span></button>
+        <button class="nav-item" data-page="desafios">🎯 <span>Desafios</span></button>
+        <button class="nav-item" data-page="config">⚙️ <span>Configurações</span></button>
+      </nav>
+      <button class="logout" id="logoutBtn">↪ Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
+        <div>
+          <span class="eyebrow">PAINEL DO RESPONSÁVEL</span>
+          <h2 id="pageTitle">Visão geral</h2>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" id="contrastBtn" title="Alto contraste">◐</button>
+          <button class="icon-btn" id="darkBtn" title="Modo escuro">◑</button>
+          <div class="avatar" id="avatar">C</div>
+        </div>
+      </header>
+
+      <div class="page-container">
+        <section id="page-dashboard" class="page active">
+          <div class="hero-card">
+            <div><span class="eyebrow">ACOMPANHAMENTO</span><h1>Olá, <span id="responsavelLabel">Responsável</span>! 👋</h1><p>Veja como está a experiência de aprendizagem de <strong id="childLabel">Ana</strong>.</p></div>
+            <div class="hero-badge">✨ PoC GuiaFoco</div>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card"><span>🎯</span><small>Taxa de acertos</small><strong>81%</strong><em>+6% esta semana</em></article>
+            <article class="stat-card"><span>⏱️</span><small>Sessão média</small><strong>18 min</strong><em>3 sessões hoje</em></article>
+            <article class="stat-card"><span>📈</span><small>Evolução semanal</small><strong>+12%</strong><em>Desempenho crescente</em></article>
+            <article class="stat-card"><span>🧩</span><small>Conclusão</small><strong>72%</strong><em>28% de abandono</em></article>
+          </div>
+          <div class="two-col">
+            <article class="card">
+              <div class="card-heading"><div><h3>Progresso de alfabetização</h3><p>Trilha de aprendizagem atual</p></div><span class="pill success">Intermediário</span></div>
+              <div class="progress-line"><span style="width:72%"></span></div>
+              <div class="progress-labels"><span>Início</span><strong>72%</strong><span>Próximo nível</span></div>
+              <div class="learning-path"><span class="done">✓ Vogais</span><span class="done">✓ Letras</span><span class="current">BA / CA</span><span>Palavras</span></div>
+            </article>
+            <article class="card">
+              <div class="card-heading"><div><h3>Intervenção adaptativa</h3><p>Resumo da sessão atual</p></div><span class="status-dot">Ativa</span></div>
+              <div class="ai-box"><div class="ai-icon">✦</div><div><strong>Nível recomendado: intermediário</strong><p>As próximas atividades podem ser ajustadas com base no tempo de resposta, acertos e erros consecutivos.</p></div></div>
+              <button class="btn btn-secondary" data-page-jump="desafios">Ver desafios</button>
+            </article>
+          </div>
+          <article class="card">
+            <div class="card-heading"><div><h3>Uso de tela hoje</h3><p>Comparação com o limite configurado</p></div><strong>1h42 / 2h30</strong></div>
+            <div class="progress-line warning"><span style="width:68%"></span></div>
+            <div class="screen-summary"><span>68% do limite utilizado</span><button class="text-btn" data-page-jump="tempo">Gerenciar tempo →</button></div>
+          </article>
+        </section>
+
+        <section id="page-crianca" class="page">
+          <div class="section-intro"><span class="eyebrow">PERFIL</span><h1>Perfil da criança</h1><p>Informações usadas para personalizar a experiência.</p></div>
+          <div class="profile-grid">
+            <article class="card profile-card"><div class="child-avatar">👧</div><h2 id="profileChildName">Ana</h2><p id="profileChildMeta">7 anos · 2º ano</p><span class="pill">Alfabetização</span></article>
+            <article class="card">
+              <h3>Dados cadastrados</h3>
+              <div class="detail-list">
+                <div><span>Idade</span><strong id="detailAge">7 anos</strong></div>
+                <div><span>Série</span><strong id="detailSeries">2º ano</strong></div>
+                <div><span>Tempo de tela estimado</span><strong id="detailEstimated">4,5 h/dia</strong></div>
+                <div><span>Limite diário</span><strong id="detailLimit">2h30</strong></div>
+                <div><span>Horário permitido</span><strong id="detailSchedule">18h–21h</strong></div>
+                <div><span>Preferências</span><strong id="detailPrefs">Memória · Puzzle</strong></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="page-desempenho" class="page">
+          <div class="section-intro"><span class="eyebrow">ANÁLISE</span><h1>Desempenho e comportamento</h1><p>Indicadores simulados para a PoC. No futuro, serão alimentados pelo backend e pela IA.</p></div>
+          <div class="metric-groups">
+            <article class="card"><h3>⏱️ Uso do dispositivo</h3><div class="metric-grid">
+              <div><span>Duração média da sessão</span><strong>18 min</strong></div><div><span>Sessões por dia</span><strong>3</strong></div><div><span>Horário das sessões</span><strong>19h–21h</strong></div><div><span>Tempo por minigame</span><strong>4,2 min</strong></div>
+            </div></article>
+            <article class="card"><h3>🎯 Desempenho</h3><div class="metric-grid">
+              <div><span>Taxa de conclusão</span><strong>72%</strong></div><div><span>Taxa de abandono</span><strong>28%</strong></div><div><span>Número de tentativas</span><strong>2,7</strong></div><div><span>Acertos</span><strong>81%</strong></div><div><span>Erros consecutivos</span><strong>1,8</strong></div><div><span>Tempo de resposta</span><strong>2,4 s</strong></div>
+            </div></article>
+            <article class="card"><h3>🧠 Comportamento</h3><div class="metric-grid">
+              <div><span>Trocas frequentes</span><strong>Alta</strong></div><div><span>Retorno após encerramento</span><strong>3 vezes</strong></div><div><span>Respeito ao limite</span><strong>Médio</strong></div><div><span>Evolução semanal</span><strong>+12%</strong></div><div class="wide"><span>Preferências</span><strong>Memória &gt; Puzzle &gt; Atenção</strong></div>
+            </div></article>
+          </div>
+          <article class="card"><div class="card-heading"><div><h3>Recomendação adaptativa</h3><p>Exemplo de análise que futuramente será realizada pela IA.</p></div><span class="pill purple">IA — PoC</span></div>
+            <div class="recommendation"><div class="recommend-icon">✦</div><div><strong>Manter dificuldade intermediária</strong><p>O desempenho atual apresenta 81% de acertos e tempo médio de resposta de 2,4 s. Para a próxima sessão, priorizar atividades curtas de palavras e memória, monitorando erros consecutivos.</p></div></div>
+          </article>
+        </section>
+
+        <section id="page-tempo" class="page">
+          <div class="section-intro"><span class="eyebrow">CONTROLE</span><h1>Tempo de tela</h1><p>Configuração e simulação da intervenção educativa.</p></div>
+          <div class="screen-grid">
+            <article class="card timer-card"><div class="timer-circle"><strong id="sessionTimer">18:32</strong><span>sessão atual</span></div><h3>Uso diário</h3><div class="big-number"><strong id="usedTime">1h42</strong><span>/ 2h30</span></div><div class="progress-line warning"><span style="width:68%"></span></div><p>Restam aproximadamente <strong>48 minutos</strong> do limite diário.</p><button class="btn btn-primary" id="simulateIntervention">Simular intervenção</button></article>
+            <article class="card"><h3>Configurações de intervenção</h3><div class="settings-list">
+              <label class="setting"><span><strong>Intervenção adaptativa</strong><small>Sugere atividade educativa quando necessário.</small></span><input id="settingIntervention" type="checkbox" checked></label>
+              <label class="setting"><span><strong>Interromper após</strong><small>Tempo máximo da sessão antes do aviso.</small></span><input id="settingMinutes" class="small-input" type="number" value="20" min="1"></label>
+              <label class="setting"><span><strong>Bloqueio/interrupção</strong><small>Simulação visual da pausa no navegador.</small></span><input id="settingBlock" type="checkbox" checked></label>
+              <label class="setting"><span><strong>Horário permitido</strong><small>Faixa de uso definida no cadastro.</small></span><strong id="settingSchedule">18h–21h</strong></label>
+            </div></article>
+          </div>
+          <article class="card"><h3>Como funciona na PoC?</h3><div class="steps"><div><b>1</b><span>O sistema registra a sessão.</span></div><div><b>2</b><span>O limite configurado é acompanhado.</span></div><div><b>3</b><span>Ao atingir o tempo, aparece a intervenção.</span></div><div><b>4</b><span>A criança pode iniciar um desafio educativo ou encerrar a sessão.</span></div></div></article>
+        </section>
+
+        <section id="page-desafios" class="page">
+          <div class="section-intro"><span class="eyebrow">ÁREA DA CRIANÇA</span><h1>Microdesafios</h1><p>Atividades curtas de alfabetização e aprendizagem.</p></div>
+          <div class="child-mode-banner"><div class="child-avatar small">👧</div><div><strong id="challengeChildName">Ana</strong><span>Vamos aprender brincando?</span></div><div class="points">⭐ 125 pontos</div></div>
+          <div class="challenge-grid">
+            <article class="challenge-card active-challenge"><span class="challenge-icon">🔤</span><h3>Palavras</h3><p>Reconheça a palavra que começa com a letra indicada.</p><button class="btn btn-primary" id="startChallenge">Começar</button></article>
+            <article class="challenge-card"><span class="challenge-icon">🧩</span><h3>Memória</h3><p>Encontre pares e exercite a associação.</p><button class="btn btn-secondary" disabled>Em breve</button></article>
+            <article class="challenge-card"><span class="challenge-icon">👀</span><h3>Atenção</h3><p>Observe, compare e escolha a resposta correta.</p><button class="btn btn-secondary" disabled>Em breve</button></article>
+          </div>
+          <div id="challengeArea" class="card challenge-area hidden">
+            <div class="challenge-question"><span class="pill purple">Desafio 1 · Palavras</span><h2>Qual palavra começa com a letra <strong>B</strong>?</h2><p>Escolha uma alternativa.</p></div>
+            <div class="answers">
+              <button data-answer="BOLA">⚽ BOLA</button><button data-answer="GATO">🐱 GATO</button><button data-answer="CASA">🏠 CASA</button><button data-answer="SAPO">🐸 SAPO</button>
+            </div>
+            <div id="challengeResult" class="result-box hidden"></div>
+          </div>
+        </section>
+
+        <section id="page-config" class="page">
+          <div class="section-intro"><span class="eyebrow">SISTEMA</span><h1>Configurações</h1><p>Acessibilidade e preferências do GuiaFoco.</p></div>
+          <div class="config-grid">
+            <article class="card"><h3>♿ Acessibilidade</h3>
+              <label class="setting"><span><strong>Alto contraste</strong><small>Aumenta a diferença visual entre elementos.</small></span><input id="accessContrast" type="checkbox"></label>
+              <label class="setting"><span><strong>Modo escuro</strong><small>Reduz a luminosidade da interface.</small></span><input id="accessDark" type="checkbox"></label>
+              <label class="setting"><span><strong>Tamanho da fonte</strong><small>Ajuste para leitura confortável.</small></span><div class="font-controls"><button id="fontDown">A−</button><span id="fontValue">100%</span><button id="fontUp">A+</button></div></label>
+            </article>
+            <article class="card"><h3>ℹ️ Sobre a PoC</h3><p>O GuiaFoco é uma prova de conceito de um sistema de intervenção adaptativa para alfabetização infantil. Nesta etapa, os dados são simulados/localmente. A futura integração com backend e IA poderá armazenar e analisar o desempenho real.</p><div class="tag-row"><span>UX/UI</span><span>WCAG</span><span>e-MAG</span><span>H1–H10</span><span>PoC</span></div></article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </section>
+
+  <div id="interventionModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-icon">⏰</div>
+      <h2 id="modalTitle">Hora de uma pausa!</h2>
+      <p>Você já está usando o dispositivo pelo tempo configurado. Que tal fazer um desafio rápido de alfabetização?</p>
+      <div class="modal-actions"><button class="btn btn-primary" id="modalChallenge">Fazer desafio</button><button class="btn btn-secondary" id="modalClose">Encerrar sessão</button></div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
